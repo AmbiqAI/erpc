@@ -25,9 +25,11 @@
 *.gz
 ._*
 .DS_Store
+.vscode
 *.swp
 *.tmp
 *.log
+venv
 
 #
 # Top-level generic files

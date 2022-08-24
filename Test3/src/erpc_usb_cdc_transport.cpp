@@ -101,7 +101,7 @@ UsbCdcTransport::~UsbCdcTransport(void)
 
 erpc_status_t UsbCdcTransport::init(void)
 {
-    erpc_status_t status = kErpcStatus_InitFailed;
+    erpc_status_t status = kErpcStatus_Success;
 
     ns_usb_register_callbacks(m_usbHandle, ERPC_ns_usb_rx_cb, ERPC_ns_usb_tx_cb);
 
@@ -110,7 +110,7 @@ erpc_status_t UsbCdcTransport::init(void)
 
 erpc_status_t UsbCdcTransport::underlyingReceive(uint8_t *data, uint32_t size)
 {
-    erpc_status_t status = kErpcStatus_ReceiveFailed;
+    erpc_status_t status = kErpcStatus_Success;
 
     s_isTransferReceiveCompleted = false;
 
@@ -138,7 +138,7 @@ erpc_status_t UsbCdcTransport::underlyingReceive(uint8_t *data, uint32_t size)
 
 erpc_status_t UsbCdcTransport::underlyingSend(const uint8_t *data, uint32_t size)
 {
-    erpc_status_t status = kErpcStatus_SendFailed;
+    erpc_status_t status = kErpcStatus_Success;
 
     s_isTransferSendCompleted = false;
 

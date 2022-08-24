@@ -80,7 +80,7 @@
 #include "ns-usb.h"
 #include "ns-malloc.h"
 #include "erpc_client_setup.h"
-#include "TempAlarm.h"
+#include "erpc_matrix_multiply.h"
 
 /// Assorted Configs and helpers
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
@@ -325,7 +325,10 @@ main(void) {
     };
 
     usb_handle_t usb_handle = ns_usb_init(&uc);
-
+    while (1)
+    {
+        tud_task(); // tinyusb device task
+    }
     /* Init eRPC client environment */
     /* USB transport layer initialization */
     erpc_transport_t transport = erpc_transport_usb_cdc_init(usb_handle); /* DEMO_UART defined in fsl_uart_cmsis.h */
@@ -338,9 +341,25 @@ main(void) {
 
     // /* other code like init matrix1 and matrix2 values */
     // ...
+    Matrix matrix1 = {
+        {1,2,3,4,5},
+        {11,12,13,14,15},
+        {21,22,23,24,25},
+        {31,32,33,34,35},
+        {41,42,43,44,45}
+    };
 
+    Matrix matrix2 = {
+        {91,92,93,94,95},
+        {91,92,93,94,95},
+        {91,92,93,94,95},
+        {91,92,93,94,95},
+        {91,92,93,94,95}
+    };
+
+    Matrix result_matrix;
     // /* call eRPC functions */
-    // erpcMatrixMultiply(matrix1, matrix2, result_matrix);
+    erpcMatrixMultiply(matrix1, matrix2, result_matrix);
 
     // /* other code like print result matrix */
     // ...

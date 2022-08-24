@@ -5,28 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug Linux erpcgen test.erpc",
-            "type": "cppdbg",
+            "cwd": "${fileDirname}",
+            "executable": "../build/${fileBasenameNoExtension}.axf",
+            "name": "Debug Microcontroller",
             "request": "launch",
-            "program": "${cwd}/Debug/Linux/erpcgen/erpcgen",
-            "args": ["-v", "-v", "-o", "Debug/Linux/erpcgen/", "${cwd}/Debug/Linux/erpcgen/test.erpc"],
-            "stopAtEntry": true,
-            "cwd": "${cwd}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "description": "Set Disassembly Flavor to Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
-                }
-            ]
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "serverpath": "/Applications/SEGGER/JLink/JLinkGDBServer",
+            "armToolchainPath": "/Users/carlosmorales/AmbiqDev/gcc-arm-none-eabi-10.3-2021.07/bin",
+            "device": "AMAP42KK-KBR",
+            "interface": "swd",
+            "serialNumber": "", // add J-Link serial number if having multiple attached the same time.
+            "runToEntryPoint": "main",
+            "svdFile": "${workspaceRoot}/pack/SVD/apollo4b.svd",
+
         }
     ]
 }
