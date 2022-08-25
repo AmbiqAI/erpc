@@ -369,9 +369,9 @@ main(void) {
         if (g_intButtonPressed == 1) {
             ns_printf("Button pressed...\n");
             erpcMatrixMultiply(matrix1, matrix2, result_matrix);
-            ns_printf("Result[0][1]:%d\n\n\n", result_matrix[0][1]);
             g_intButtonPressed = 0;
             ns_delay_us(1000);
+            ns_printf("Result[0][1]:%d\n\n\n", result_matrix[0][1]);
         }
     }
     // /* other code like print result matrix */

@@ -9,6 +9,8 @@
 #include <cstdio>
 #include "erpc_usb_cdc_transport.hpp"
 #include "ns-usb.h"
+#include "ns_ambiqsuite_harness.h"
+#include "ns-usb.h"
 
 using namespace erpc;
 
@@ -32,6 +34,8 @@ static UsbCdcTransport *s_usbcdc_instance = NULL;
 
 static void ERPC_ns_usb_tx_cb(ns_usb_transaction_t *tr)
 {
+    ns_printf("NS USB TX CB\n");
+
     UsbCdcTransport *transport = s_usbcdc_instance;
     if (NULL != tr)
     {
@@ -48,6 +52,8 @@ static void ERPC_ns_usb_tx_cb(ns_usb_transaction_t *tr)
 
 static void ERPC_ns_usb_rx_cb(ns_usb_transaction_t *tr)
 {
+    ns_printf("NS USB RX CB\n");
+
     UsbCdcTransport *transport = s_usbcdc_instance;
     if (NULL != tr)
     {
@@ -114,7 +120,14 @@ erpc_status_t UsbCdcTransport::underlyingReceive(uint8_t *data, uint32_t size)
 
     s_isTransferReceiveCompleted = false;
 
-    uint32_t bytes_rx = ns_usb_recieve_data(m_usbHandle, data, size); // blocking
+    ns_printf("NS USB asked for %d\n", size);
+
+    uint32_t bytes_rx = 0;
+    //while (bytes_rx < size) {
+        tud_task(); // tinyusb device task
+        bytes_rx = ns_usb_recieve_data(m_usbHandle, data, size);
+    //}
+    ns_printf("NS USB asked for %d, Rec %d bytes\n", size, bytes_rx);
     return status;
 }
 //      {
@@ -144,6 +157,9 @@ erpc_status_t UsbCdcTransport::underlyingSend(const uint8_t *data, uint32_t size
 
 
     uint32_t bytes_rx = ns_usb_send_data(m_usbHandle, (uint8_t*)data, size); // blocking
+    ns_printf("NS USB asked to send %d, sent %d bytes\n", size, bytes_rx);
+            tud_cdc_write_flush();
+
     return status;
 
 //     if (kStatus_SerialManager_Success == SerialManager_WriteNonBlocking(s_serialWriteHandle, data, size))

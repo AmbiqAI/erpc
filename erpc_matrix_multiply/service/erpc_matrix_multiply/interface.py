@@ -16,6 +16,7 @@ class IMatrixMultiplyService(object):
     ERPCMATRIXMULTIPLY_ID = 1
 
     def erpcMatrixMultiply(self, matrix1, matrix2, result_matrix):
+        print('Should be here!')
         raise NotImplementedError()
 
 

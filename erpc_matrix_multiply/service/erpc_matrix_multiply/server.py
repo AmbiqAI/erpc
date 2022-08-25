@@ -45,6 +45,7 @@ class MatrixMultiplyServiceService(erpc.server.Service):
 
             matrix2.append(_v0)
 
+        print('Got a call!')
 
         # Invoke user implementation of remote function.
         self._handler.erpcMatrixMultiply(matrix1, matrix2, result_matrix)

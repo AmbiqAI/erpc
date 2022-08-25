@@ -16,6 +16,8 @@ class SimpleServer(Server):
     def __init__(self, transport=None, codecClass=None):
         super(SimpleServer, self).__init__(transport, codecClass)
         self._run = True
+        print("server started")
+
 
     def run(self):
         self._run = True
@@ -30,14 +32,17 @@ class SimpleServer(Server):
 
     def _receive_request(self):
         msg = self.transport.receive()
-
+        print("server rcv msg")
         codec = self.codec_class()
         codec.buffer = msg
 
         self._process_request(codec)
+        print("server processed request")
 
         if len(codec.buffer):
+            print("server sending resp")
             self.transport.send(codec.buffer)
+            print("server sent resp")
 
 
 class ServerThread(SimpleServer):

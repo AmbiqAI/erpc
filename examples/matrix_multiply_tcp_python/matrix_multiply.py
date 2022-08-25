@@ -150,7 +150,7 @@ if __name__ == "__main__":
         argParser.print_help()
         sys.exit('\r\nEither server or client has to be selected to run')
 
-    print('eRPC Matrix Multiply example')
+    print('eRPC Matrix Multiply example2')
 
     if args.serial:
         # initialize Serial transport layer
@@ -165,5 +165,5 @@ if __name__ == "__main__":
 
     elif args.server:
         # Note: TCP server is ran in daemon thread, so flush is needed to see printouts
-        print('Server created on \"%s:%s\"' % (args.host, args.port))
+        print('Server created on \"%s:%s\"' % (args.serial, args.baud))
         runServer(transport)
