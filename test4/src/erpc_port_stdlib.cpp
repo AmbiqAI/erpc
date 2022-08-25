@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <new>
 #include "ns-malloc.h"
+#include "ns_ambiqsuite_harness.h"
 
 using namespace std;
 
@@ -67,12 +68,15 @@ void operator delete[](void *ptr, std::size_t count) THROW NOEXCEPT
 void *erpc_malloc(size_t size)
 {
     void *p = ns_malloc(size);
+    ns_printf("erpc malloc for %d, got 0x%x\n", size, p);
     return p;
 }
 
 void erpc_free(void *ptr)
 {
     ns_free(ptr);
+    ns_printf("erpc free for 0x%x\n", ptr);
+
 }
 
 /* Provide function for pure virtual call to avoid huge demangling code being linked in ARM GCC */

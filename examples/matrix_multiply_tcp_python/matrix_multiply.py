@@ -150,7 +150,7 @@ if __name__ == "__main__":
         argParser.print_help()
         sys.exit('\r\nEither server or client has to be selected to run')
 
-    print('eRPC Matrix Multiply TCP example')
+    print('eRPC Matrix Multiply example')
 
     if args.serial:
         # initialize Serial transport layer

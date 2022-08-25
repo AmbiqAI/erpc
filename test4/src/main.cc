@@ -307,6 +307,9 @@ main(void) {
     uint8_t y_intent_max;
     float max_val = 0.0;
 
+    ns_itm_printf_enable();
+    ns_debug_printf_enable();
+
     g_audioRecording = false;
     am_hal_interrupt_master_enable();
 
@@ -326,10 +329,7 @@ main(void) {
     };
 
     usb_handle_t usb_handle = ns_usb_init(&uc);
-    while (1)
-    {
-        tud_task(); // tinyusb device task
-    }
+ 
     /* Init eRPC client environment */
     /* USB transport layer initialization */
     erpc_transport_t transport = erpc_transport_usb_cdc_init(usb_handle); /* DEMO_UART defined in fsl_uart_cmsis.h */
@@ -360,8 +360,20 @@ main(void) {
 
     Matrix result_matrix;
     // /* call eRPC functions */
-    erpcMatrixMultiply(matrix1, matrix2, result_matrix);
+    ns_peripheral_button_init(&button_config);
+    ns_printf("Press button to send rpc...\n");
 
+    while (1)
+    {
+        tud_task(); // tinyusb device task
+        if (g_intButtonPressed == 1) {
+            ns_printf("Button pressed...\n");
+            erpcMatrixMultiply(matrix1, matrix2, result_matrix);
+            ns_printf("Result[0][1]:%d\n\n\n", result_matrix[0][1]);
+            g_intButtonPressed = 0;
+            ns_delay_us(1000);
+        }
+    }
     // /* other code like print result matrix */
     // ...
 

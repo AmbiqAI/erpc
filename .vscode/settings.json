@@ -1,4 +1,6 @@
 {
     "makefile.extensionOutputFolder": "./.vscode",
-    "cortex-debug.registerUseNaturalFormat": false
+    "cortex-debug.registerUseNaturalFormat": false,
+    "cortex-debug.variableUseNaturalFormat": false,
+    "C_Cpp.dimInactiveRegions": false
 }
