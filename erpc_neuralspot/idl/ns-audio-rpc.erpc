@@ -4,9 +4,7 @@
 //!
 //! @brief Interface definition for neuralspot audio RPC
 //!
-//!
 //*****************************************************************************
-
 
 program ns_audio_rpc
 
@@ -28,7 +26,7 @@ struct nsAudioBuffer_t {
     binary buf @length(max_audio_buffer_length);
 }
 
-struct audioCommand_t {
+struct nsAudioCommand_t {
     nsAudioAction_e cmd;
     nsAudioBuffer_t buf;
 }

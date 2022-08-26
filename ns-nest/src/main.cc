@@ -80,7 +80,8 @@
 #include "ns-usb.h"
 #include "ns-malloc.h"
 #include "erpc_client_setup.h"
-#include "erpc_matrix_multiply.h"
+#include "ns_audio_rpc.h"
+// #include "erpc_matrix_multiply.h"
 
 /// Assorted Configs and helpers
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
@@ -313,14 +314,7 @@ main(void) {
     g_audioRecording = false;
     am_hal_interrupt_master_enable();
 
-    // Test Malloc
-    uint8_t *foo;
-    foo = (uint8_t*)ns_malloc(100);
-    foo[5] = 0xDE;
-    foo[0] = 0xAD;
-    uint8_t moo = foo[5];
-
-        ns_usb_config_t uc = {
+    ns_usb_config_t uc = {
         .deviceType = NS_USB_CDC_DEVICE,
         .buffer = rpc_ring_buffer,
         .bufferLength = RPC_BUFFER_LEN,
@@ -332,7 +326,7 @@ main(void) {
  
     /* Init eRPC client environment */
     /* USB transport layer initialization */
-    erpc_transport_t transport = erpc_transport_usb_cdc_init(usb_handle); /* DEMO_UART defined in fsl_uart_cmsis.h */
+    erpc_transport_t transport = erpc_transport_usb_cdc_init(usb_handle);
 
     /* MessageBufferFactory initialization */
     erpc_mbf_t message_buffer_factory = erpc_mbf_dynamic_init();
@@ -340,74 +334,74 @@ main(void) {
     /* eRPC client side initialization */
     erpc_client_init(transport, message_buffer_factory);
 
-    // /* other code like init matrix1 and matrix2 values */
-    // ...
-    Matrix matrix1 = {
-        {1,2,3,4,5},
-        {11,12,13,14,15},
-        {21,22,23,24,25},
-        {31,32,33,34,35},
-        {41,42,43,44,45}
-    };
-
-    Matrix matrix2 = {
-        {91,92,93,94,95},
-        {91,92,93,94,95},
-        {91,92,93,94,95},
-        {91,92,93,94,95},
-        {91,92,93,94,95}
-    };
-
-    Matrix result_matrix;
-    // /* call eRPC functions */
     ns_peripheral_button_init(&button_config);
-    ns_printf("Press button to send rpc...\n");
 
-    while (1)
-    {
-        tud_task(); // tinyusb device task
-        if (g_intButtonPressed == 1) {
-            ns_printf("Button pressed...\n");
-            erpcMatrixMultiply(matrix1, matrix2, result_matrix);
-            g_intButtonPressed = 0;
-            ns_delay_us(1000);
-            ns_printf("Result[0][1]:%d\n\n\n", result_matrix[0][1]);
-        }
-    }
-    // /* other code like print result matrix */
-    // ...
+    // Set up audio dump buffer
+    nsAudioBuffer_t dump = {
+        .bufferLength = SAMPLES_IN_FRAME * sizeof(int16_t),
+        .buf = (uint8_t*)g_in16AudioDataBuffer
+    };
 
-    // return 0;
+    audioCommand_t cmd = {
+        .cmd = nsAudioDisplayAudio,
+        .buf = dump
+    };
 
+    // Matrix matrix1 = {
+    //     {1,2,3,4,5},
+    //     {11,12,13,14,15},
+    //     {21,22,23,24,25},
+    //     {31,32,33,34,35},
+    //     {41,42,43,44,45}
+    // };
 
+    // Matrix matrix2 = {
+    //     {91,92,93,94,95},
+    //     {91,92,93,94,95},
+    //     {91,92,93,94,95},
+    //     {91,92,93,94,95},
+    //     {91,92,93,94,95}
+    // };
+    // Matrix result_matrix;
 
-    ns_itm_printf_enable();
+    // while (1)
+    // {
+    //     tud_task(); // tinyusb device task
+    //     if (g_intButtonPressed == 1) {
+    //         ns_printf("Button pressed...\n");
+    //         // erpcMatrixMultiply(matrix1, matrix2, result_matrix);
 
-    // Configure power - different use modes
-    // require different power configs
-    // This examples uses pre-populated power config structs - 
-    // to modify create a local struct and pass it to
-    // ns_power_config()
-#ifdef AUDIODEBUG
-    // This mode uses RTT, which needs SRAM
-    ns_debug_printf_enable();
-    ns_power_config(&ns_development_default);
-#else
-    #ifdef ENERGYMODE
-    ns_uart_printf_enable(); // use uart to print, turn off crypto
-    // This is only for measuring power using an external power monitor such as
-    // Joulescope - it sets GPIO pins so the state can be observed externally
-    // to help line up the waveforms. It has nothing to do with AI...
-    ns_init_power_monitor_state();
-    ns_power_set_monitor_state(&am_ai_audio_default);
-    #else
-    ns_debug_printf_enable(); // Leave crypto on for ease of debugging
-    ns_power_config(&ns_development_default);
-    #endif
-#endif
+    //         ns_printf("result is %d\n", erpcDumpAudioBuffer(&cmd)); 
+    //         g_intButtonPressed = 0;
+    //         ns_delay_us(1000);
+    //         // ns_printf("Result[0][1]:%d\n\n\n", result_matrix[0][1]);
+    //   }
+    // }
 
-    am_util_stdio_printf("moo is %d, at %x\n", moo, &(foo[5]));
-    ns_free(foo);
+//     ns_itm_printf_enable();
+
+//     // Configure power - different use modes
+//     // require different power configs
+//     // This examples uses pre-populated power config structs - 
+//     // to modify create a local struct and pass it to
+//     // ns_power_config()
+// #ifdef AUDIODEBUG
+//     // This mode uses RTT, which needs SRAM
+//     ns_debug_printf_enable();
+//     ns_power_config(&ns_development_default);
+// #else
+//     #ifdef ENERGYMODE
+//     ns_uart_printf_enable(); // use uart to print, turn off crypto
+//     // This is only for measuring power using an external power monitor such as
+//     // Joulescope - it sets GPIO pins so the state can be observed externally
+//     // to help line up the waveforms. It has nothing to do with AI...
+//     ns_init_power_monitor_state();
+//     ns_power_set_monitor_state(&am_ai_audio_default);
+//     #else
+//     ns_debug_printf_enable(); // Leave crypto on for ease of debugging
+//     ns_power_config(&ns_development_default);
+//     #endif
+// #endif
 
     // Initialize everything else
     model_init();
@@ -422,6 +416,8 @@ main(void) {
 #endif
 
     while (1) {
+        tud_task(); // tinyusb device task
+
         if ((g_intButtonPressed) == 1 && !g_audioRecording) {
             ns_delay_us(1000);
             g_audioRecording = true;
@@ -448,6 +444,10 @@ main(void) {
 
                     recording_win--;
                     g_audioReady = false;
+                    tud_task(); // tinyusb device task
+
+                    nsAudioStatus_e stat = erpcDumpAudioBuffer(&cmd);
+
 #ifdef AUDIODEBUG
                     SEGGER_RTT_Write(1, g_in16AudioDataBuffer,
                                      SAMPLES_IN_FRAME * sizeof(int16_t));
