@@ -1,0 +1,38 @@
+//*****************************************************************************
+//
+//! @file ns-audio-rpc.erpc
+//!
+//! @brief Interface definition for neuralspot audio RPC
+//!
+//!
+//*****************************************************************************
+
+
+program ns_audio_rpc
+
+const int32 max_audio_buffer_length = 1024;
+
+enum nsAudioStatus_e {
+    nsAudioRPCStatus_success,
+    nsAudioRPCStatus_failure
+}
+
+enum nsAudioAction_e {
+    nsAudioPlayAudio,
+    nsAudioDisplayAudio,
+    nsAudioAppendToAudioFile
+}
+
+struct nsAudioBuffer_t {
+    uint32 bufferLength;
+    binary buf @length(max_audio_buffer_length);
+}
+
+struct audioCommand_t {
+    nsAudioAction_e cmd;
+    nsAudioBuffer_t buf;
+}
+
+interface ns_audio_rpc {
+    erpcDumpAudioBuffer(in audioCommand_t buf) -> nsAudioStatus_e
+}
