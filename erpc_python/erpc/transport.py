@@ -88,6 +88,8 @@ class FramedTransport(Transport):
 
             # Now we know the length, read the rest of the message.
             data = self._base_receive(messageLength)
+            # print(headerData)
+            # print(data)
             computedCrc = self._Crc16.computeCRC16(data)
 
             if computedCrc != crc:
@@ -118,6 +120,7 @@ class SerialTransport(FramedTransport):
 
     def _base_send(self, data):
         self._serial.write(data)
+        self._serial.flushOutput()
 
     def _base_receive(self, count):
         return self._serial.read(count)
