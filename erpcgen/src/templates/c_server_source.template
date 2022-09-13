@@ -7,8 +7,8 @@
 #include "{$serverHeaderName}"
 #if ERPC_ALLOCATION_POLICY == ERPC_ALLOCATION_POLICY_DYNAMIC
 #include <new>
-#include "erpc_port.h"
 #endif
+#include "erpc_port.h"
 #include "erpc_manually_constructed.hpp"
 {% if empty(group.includes) == false %}
 extern "C"

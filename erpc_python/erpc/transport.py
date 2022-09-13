@@ -75,6 +75,9 @@ class FramedTransport(Transport):
             header = bytearray(struct.pack('<HH', len(message), crc))
             assert len(header) == self.HEADER_LEN
             self._base_send(header + message)
+            # print("transport")
+            # print(header)
+            # print(message)
         finally:
             self._sendLock.release()
 
@@ -120,7 +123,11 @@ class SerialTransport(FramedTransport):
 
     def _base_send(self, data):
         self._serial.write(data)
+        time.sleep(0.001)
+
+        #print(len(data))
         self._serial.flushOutput()
+        # self._serial.flushOutput() # srsly?
 
     def _base_receive(self, count):
         return self._serial.read(count)

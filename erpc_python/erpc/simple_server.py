@@ -34,6 +34,7 @@ class SimpleServer(Server):
         codec.buffer = msg
 
         self._process_request(codec)
+        # print(codec.buffer)
 
         if len(codec.buffer):
             self.transport.send(codec.buffer)
