@@ -123,10 +123,10 @@ class SerialTransport(FramedTransport):
 
     def _base_send(self, data):
         self._serial.write(data)
-        time.sleep(0.001)
+        # time.sleep(0.001)
+        self._serial.flush()
 
         #print(len(data))
-        self._serial.flushOutput()
         # self._serial.flushOutput() # srsly?
 
     def _base_receive(self, count):

@@ -13,7 +13,7 @@ from . import common, interface
 {% if groupNames %}
 # import callbacks declaration from other groups
 {% for name in groupNames if name != group.name %}
-from ..{$outputFilename}_{$name} import interface as interface_{$name}
+# from ..{$outputFilename}_{$name} import interface as interface_{$name}
 {% endfor %}
 {% endif %}
 
